@@ -1,0 +1,26 @@
+{
+  "endpoints": [
+    {
+      "name": "api1",
+      "endpoint": "https://api.example.com/data1",
+      "pointModel": "model1",
+      "interval": 60000,
+      "tokenEnvVar": "TOKEN_FOR_ENDPOINT_1",
+      "mapping": {
+        "field1": "/path/to/field1",
+        "field2": "/path/to/field2"
+      }
+    },
+    {
+      "name": "api2",
+      "endpoint": "https://api.example.com/data2",
+      "pointModel": "model2",
+      "interval": 30000,
+      "tokenEnvVar": "TOKEN_FOR_ENDPOINT_2",
+      "mapping": {
+        "field3": "/path/to/field3",
+        "field4": "/path/to/field4"
+      }
+    }
+  ]
+}
