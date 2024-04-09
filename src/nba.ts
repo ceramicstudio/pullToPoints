@@ -1,4 +1,4 @@
-from './points.js' import PointData
+import { PointData } from './points';
 
 const TEAM_WINS=''
 const TEAM_LOSSES=''

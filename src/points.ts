@@ -11,7 +11,7 @@ function hexStringToUint8Array(hexString: string): Uint8Array {
   return new Uint8Array(matches.map((byte: string) => parseInt(byte, 16)));
 }
 
-interface PointData {
+export interface PointData {
   recipient: string;
   model: string;
   context: string;
