@@ -1,55 +1,83 @@
 import express from 'express';
 import axios from 'axios';
 import config from 'config';
+import { getContext, Publisher } from './points';
+import { generateGameResults, generatePlayerResults } from './nba';
 
 const app = express();
+let publisher: Publisher;
 
-interface Endpoint {
+interface Source {
   name: string;
   endpoint: string;
   pointModel: string;
-  interval: number;
+  intervalMS: number;
   tokenEnvVar: string;
   mapping: Record<string, string>;
 }
 
-function readConfig(): Endpoint[] {
-  return config.get('endpoints');
+function readConfig(): Source[] {
+  return config.get('sources');
 }
 
-async function fetchData(endpoint: Endpoint) {
+async function fetchData(source: Source) {
+  let endpoint;
   try {
-    const token = process.env[endpoint.tokenEnvVar];
+    const token = process.env[source.tokenEnvVar];
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-    const response = await axios.get(endpoint.endpoint, { headers });
-    const data = response.data;
-    processData(endpoint, data);
+    // special handling per source, factor this out
+    endpoint = source.endpoint
+    if (source.name == 'nba_games') {
+        let yesterday: string = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+        // start and end dates are inclusive
+        endpoint = `${endpoint}?start_date=${yesterday}&end_date=${yesterday}`
+    }
+    const response = await axios.get(endpoint, { headers });
+    return response.data;
   } catch (error) {
-    console.error(`Error fetching data from ${endpoint.endpoint}:`, error);
+    console.error(`Error fetching data from ${endpoint}:`, error);
   }
 }
 
-function processData(endpoint: Endpoint, data: any) {
-  // Process the fetched data based on the endpoint configuration
+async function runPipe(source: Source) {
+  // Process the fetched data based on the source configuration
   // You can customize this function based on your specific requirements
-  console.log(`Processing data for ${endpoint.pointModel}:`, data);
-  // Use endpoint.mapping to map the fetched data to the desired structure
+  const rawData = await fetchData(source)
+
+  console.log(`Processing data for ${source.pointModel}:`, rawData);
+  let generator;
+  // map to the appropriate generator
+  if (source.name == 'nba_games') {
+     generator = generateGameResults(rawData['data'])
+  } else if (source.name == 'nba_stats') {
+     generator = generatePlayerResults(rawData['data'])
+  }
+
+  if (! generator) {
+     return
+  }
+
+  for (let pointData of generator) {
+    // Here you process and publish each PointData
+    await publisher.publishPoints(pointData);
+  }
 }
 
-function startRetrievalInterval(endpoint: Endpoint) {
-  setInterval(() => fetchData(endpoint), endpoint.interval);
+function startRetrievalInterval(source: Source) {
+  setInterval(() => runPipe(source), source.intervalMS);
 }
 
 function startBackgroundTasks() {
-  const endpoints = readConfig();
-  endpoints.forEach(endpoint => {
-    startRetrievalInterval(endpoint);
+  const sources = readConfig();
+  sources.forEach(source => {
+    startRetrievalInterval(source);
   });
 }
 
 app.listen(3000, () => {
+  publisher = new Publisher(getContext());
   console.log('Server is running on port 3000');
   startBackgroundTasks();
 });

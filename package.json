@@ -2,7 +2,6 @@
   "name": "pullToPoints",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/app.ts",
     "start": "ts-node src/app.ts",
@@ -12,17 +11,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ceramicnetwork/http-client": "^5.6.0",
+    "@composexp/did-utils": "link:../solutions/utils/did",
+    "@composexp/points": "link:../solutions/libraries/points",
     "@types/config": "^3.3.4",
     "axios": "^1.6.8",
     "config": "^3.3.11",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "uint8arrays": "^5.0.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^20.12.3",
+    "@types/node": "^20.12.6",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.4"
   }
 }

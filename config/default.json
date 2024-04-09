@@ -3,7 +3,7 @@
     {
       "name": "nba_games",
       "endpoint": "https://api.balldontlie.io/v1/games",
-      "interval": 60000,
+      "intervalMS": 86400000,
       "pointsModel": "",
       "tokenEnvVar": "BALLDONTLIE_TOKEN",
       "mapping": {}
