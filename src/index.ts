@@ -38,8 +38,6 @@ async function fetchData(source: Source) {
         // they do not use Bearer
         headers['Authorization'] = `${token}`
     }
-    debugger;
-    console.log("headers are: " + JSON.stringify(headers));
     const response = await axios.get(endpoint, { headers });
     return response.data;
   } catch (error) {

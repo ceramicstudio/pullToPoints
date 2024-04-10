@@ -1,10 +1,15 @@
 import { PointData } from './points';
 
-const TEAM_WINS=''
-const TEAM_LOSSES=''
-const PLAYER_MINUTES=''
-const PLAYER_ASSISTS=''
-const PLAYER_POINTS=''
+// the aggregators
+const TEAM_WINS='kjzl6hvfrbw6c9skiblzj0w8xpyxf13lv7wthbhcmk9lprrnll8n6cg11d0ja7h'
+const TEAM_LOSSES='kjzl6hvfrbw6c5vw1ysoj2g3v623dxdca0q4i0hxgsuwfm7i18dx3h4b4idi91o'
+const PLAYER_MINUTES='kjzl6hvfrbw6caqg3n11v5v87ghz2h3enkvli7v1l2avfl3xbxuxe20gdwivxtc'
+const PLAYER_ASSISTS='kjzl6hvfrbw6c5nuugjh10309fcxjpgmb4zwghm8byjcb3gyrq3k2agdrs3jk82'
+const PLAYER_POINTS='kjzl6hvfrbw6c7aw39l8ww4042nedgby2aceqte29qls5n6j8cn14xsa16qi41o'
+
+// the allocators that enforce one allocation event per game+team/player
+//const GAME_OUTCOME = 'kjzl6hvfrbw6c7h7n6p4xapmgjhmeg1feo1r4cg0q2armvdkcvqdkojf9zsumda'
+//const PLAYER_OUTCOME = 'kjzl6hvfrbw6caf1cj3l2iwrpkjbz42wha1rzskpxzggtz5gjpt08u72rd1x8u9'
 
 // yields multiple {recipient, model, context, amt}
 interface DData {
@@ -25,11 +30,11 @@ interface PlayerEvent {
 }
 
 function make_team_did(full_name: string) {
-   return `did:nba_team:${full_name.replace(/\s+/g, '_')}`;
+   return `did:nba_team_test:${full_name.replace(/\s+/g, '_')}`;
 }
 
 function make_player_did(first: string, last:string, id:number) {
-   return `did:nba_player:${first.replace(/\s+/g, '_')}_${last.replace(/\s+/g, '_')}_${id}`
+   return `did:nba_player_test:${first.replace(/\s+/g, '_')}_${last.replace(/\s+/g, '_')}_${id}`
 }
 
 export function* generateGameResults(gameData: GameEvent[]): Generator<PointData> {

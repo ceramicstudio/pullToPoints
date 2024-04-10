@@ -1,0 +1,109 @@
+
+interface PointsAggregation @loadModel(id: "kjzl6hvfrbw6cb6393dpd8blke5w8r7pvbl4449mxetuibcav3oab8fnxmys6d6") {
+  id: ID!
+}
+
+interface MultiplePointsAllocation @loadModel(id: "kjzl6hvfrbw6ca7buvthejhv7vqr85vmpsepzj0mc6665y2zarvjbuvtm3v4kah") {
+  id: ID!
+}
+
+# This could have been a single point model
+# but we want to enforce only one score per day per team
+
+type NbaTeamWins implements PointsAggregation
+  @createModel(
+    description: "NBA Team Wins"
+    accountRelation: SET
+    accountRelationFields: ["recipient"]
+  ) {
+    issuer: DID! @documentAccount
+    recipient: DID! @accountReference
+    points: Int!
+    date: DateTime!
+  }
+
+type NbaTeamLosses implements PointsAggregation
+  @createModel(
+    description: "NBA Team Wins"
+    accountRelation: SET
+    accountRelationFields: ["recipient"]
+  ) {
+    issuer: DID! @documentAccount
+    recipient: DID! @accountReference
+    points: Int!
+    date: DateTime!
+  }
+
+type NbaGameOutcome implements MultiplePointsAllocation
+  @createModel(
+    description: "Game outcome for a given Team"
+    accountRelation: SET
+
+    # enforce only one outcome per team per game date 
+    # this allows safe data reloads
+    accountRelationFields: ["recipient", "gameDate"]  
+  ) {
+    issuer: DID! @documentAccount
+    recipient: DID! @accountReference
+    points: Int!
+    outcome: String! @string(maxLength: 16)
+    gameDate: DateTime!
+  }
+
+# Generally we have a model per aggregate that we want to sum over
+# unless the points convert into each other
+
+type NbaPlayerMinutes implements PointsAggregation
+  @createModel(
+    description: "NBA Player Game Minutes Total"
+    accountRelation: SET
+    accountRelationFields: ["recipient"]
+  ) {
+    issuer: DID! @documentAccount
+    recipient: DID! @accountReference
+    points: Int!
+    date: DateTime!
+  }
+
+type NbaPlayerAssists implements PointsAggregation
+  @createModel(
+    description: "NBA Player Assists Total"
+    accountRelation: SET
+    accountRelationFields: ["recipient"]
+  ) {
+    issuer: DID! @documentAccount
+    recipient: DID! @accountReference
+    points: Int!
+    date: DateTime!
+  }
+
+type NbaPlayerPoints implements PointsAggregation
+  @createModel(
+    description: "NBA Player Points Scored Total"
+    accountRelation: SET
+    accountRelationFields: ["recipient"]
+  ) {
+    issuer: DID! @documentAccount
+    recipient: DID! @accountReference
+    points: Int!
+    date: DateTime!
+  }
+
+type NbaPlayerGameStats implements MultiplePointsAllocation
+  @createModel(
+    description: "Stats for a given player for a given game"
+    accountRelation: SET
+
+    # enforce only one set of stats per player per game date
+    # this allows safe data reloads
+    # assumes we have all at once to allocate
+    accountRelationFields: ["recipient", "gameDate"]
+  ) {
+    issuer: DID! @documentAccount
+    recipient: DID! @accountReference
+    minutes: Int
+    assists: Int
+    points_scored: Int
+    points: Int!
+    gameDate: DateTime!
+  }
