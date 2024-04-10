@@ -16,6 +16,7 @@ interface Source {
   mapping: Record<string, string>;
 }
 
+// reads from config/default.json
 function readConfig(): Source[] {
   return config.get('sources');
 }

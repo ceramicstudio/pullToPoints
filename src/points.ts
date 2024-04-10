@@ -2,14 +2,7 @@
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import { getAuthenticatedDID } from '@composexp/did-utils'
 import { PointsWriter } from '@composexp/points'
-
-function hexStringToUint8Array(hexString: string): Uint8Array {
-  const matches = hexString.match(/.{1,2}/g);
-  if (!matches) {
-    throw new Error('Invalid hex string');
-  }
-  return new Uint8Array(matches.map((byte: string) => parseInt(byte, 16)));
-}
+import { fromString } from 'uint8arrays';
 
 export interface PointData {
   recipient: string;
@@ -23,8 +16,9 @@ export async function getContext() {
   // CERAMIC SPECIFIC PART HERE
   const CERAMIC_URL = process.env.CERAMIC_URL || "";
   const CERAMIC_PRIVATE_KEY = process.env.CERAMIC_PRIVATE_KEY || "";
-  const key = hexStringToUint8Array(CERAMIC_PRIVATE_KEY);
+  const key = fromString(CERAMIC_PRIVATE_KEY, "base16");
 
+  console.log("Using ceramic node at " + CERAMIC_URL)
   const ceramic = new CeramicClient(CERAMIC_URL);
   ceramic.did = await getAuthenticatedDID(key);
   // CERAMIC SPECIFIC CODE HERE

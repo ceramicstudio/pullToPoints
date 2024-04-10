@@ -1,5 +1,5 @@
 {
-  "endpoints": [
+  "sources": [
     {
       "name": "nba_games",
       "endpoint": "https://api.balldontlie.io/v1/games",
