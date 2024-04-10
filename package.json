@@ -16,11 +16,15 @@
     "@ceramicnetwork/http-client": "^5.6.0",
     "@composexp/did-utils": "link:../solutions/utils/did",
     "@composexp/points": "link:../solutions/libraries/points",
+    "@didtools/codecs": "^3.0.0",
     "@types/config": "^3.3.4",
     "axios": "^1.6.8",
     "config": "^3.3.11",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "ipfs-core-types": "^0.14.1",
+    "ts-essentials": "^9.4.2",
+    "uint8arrays": "^5.0.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
