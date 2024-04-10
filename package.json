@@ -17,7 +17,7 @@
   "scripts": {
     "build:clean": "rimraf dist",
     "build:js": "swc src -d ./dist --config-file .swcrc --strip-leading-paths",
-    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly --skipLibCheck",
+    "build:types": "tsc --project tsconfig.json --emitDeclarationOnly --skipLibCheck",
     "build": "pnpm build:clean && pnpm build:types && pnpm build:js",
     "clean": "rimraf node_modules dist",
     "dev": "nodemon --exec ts-node src/index.ts",
