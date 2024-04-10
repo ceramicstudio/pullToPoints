@@ -1,12 +1,27 @@
 {
   "name": "pullToPoints",
   "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "description": "",
   "scripts": {
-    "build": "tsc",
+    "build:clean": "rimraf dist",
+    "build:js": "swc src -d ./dist --config-file .swcrc --strip-leading-paths",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly --skipLibCheck",
+    "build": "pnpm build:clean && pnpm build:types && pnpm build:js",
     "clean": "rimraf node_modules dist",
-    "dev": "nodemon --exec ts-node src/app.ts",
-    "start": "node dist/app.js",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -23,6 +38,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "ipfs-core-types": "^0.14.1",
+    "swc": "^1.0.11",
     "ts-essentials": "^9.4.2",
     "uint8arrays": "^5.0.3"
   },
@@ -31,6 +47,9 @@
     "@types/node": "^20.12.6",
     "nodemon": "^3.1.0",
     "rimraf": "^5.0.5",
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.4.12",
+    "@swc/jest": "^0.2.36",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.4"
   }

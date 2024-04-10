@@ -1,8 +1,8 @@
 import express from 'express';
 import axios from 'axios';
 import config from 'config';
-import { getContext, Publisher } from './points';
-import { generateGameResults, generatePlayerResults } from './nba';
+import { getContext, Publisher } from './points.js';
+import { generateGameResults, generatePlayerResults } from './nba.js';
 
 const app = express();
 let publisher: Publisher;
