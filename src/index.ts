@@ -30,11 +30,16 @@ async function fetchData(source: Source) {
     };
     // special handling per source, factor this out
     endpoint = source.endpoint
-    if (source.name == 'nba_games') {
+    if (source.name == 'nba_games' || source.name == 'nba_stats') {
         let yesterday: string = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
         // start and end dates are inclusive
         endpoint = `${endpoint}?start_date=${yesterday}&end_date=${yesterday}`
+
+        // they do not use Bearer
+        headers['Authorization'] = `${token}`
     }
+    debugger;
+    console.log("headers are: " + JSON.stringify(headers));
     const response = await axios.get(endpoint, { headers });
     return response.data;
   } catch (error) {
@@ -45,6 +50,7 @@ async function fetchData(source: Source) {
 async function runPipe(source: Source) {
   // Process the fetched data based on the source configuration
   // You can customize this function based on your specific requirements
+  console.log(`fetching from ${source.name}`);
   const rawData = await fetchData(source)
 
   console.log(`Processing data for ${source.pointModel}:`, rawData);
@@ -70,15 +76,18 @@ function startRetrievalInterval(source: Source) {
   setInterval(() => runPipe(source), source.intervalMS);
 }
 
-function startBackgroundTasks() {
-  const sources = readConfig();
-  sources.forEach(source => {
+async function startBackgroundTasks() {
+  for (const source of readConfig()) {
+    console.log("Starting first run for " + source.name);
+    await runPipe(source);
     startRetrievalInterval(source);
-  });
+  }
 }
 
-app.listen(3000, () => {
-  publisher = new Publisher(getContext());
+app.listen(3000, async () => {
+  const ceramic = await getContext()
+  publisher = new Publisher(ceramic);
   console.log('Server is running on port 3000');
-  startBackgroundTasks();
+  await startBackgroundTasks();
+  console.log('All sources started');
 });

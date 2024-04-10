@@ -22,6 +22,7 @@
     "clean": "rimraf node_modules dist",
     "dev": "nodemon --exec ts-node src/index.ts",
     "start": "node dist/index.js",
+    "debug": "node --inspect dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -29,6 +30,7 @@
   "license": "ISC",
   "dependencies": {
     "@ceramicnetwork/http-client": "^5.6.0",
+    "@composedb/types": "^0.7.1",
     "@composexp/did-utils": "link:../solutions/utils/did",
     "@composexp/points": "link:../solutions/libraries/points",
     "@didtools/codecs": "^3.0.0",
@@ -43,13 +45,13 @@
     "uint8arrays": "^5.0.3"
   },
   "devDependencies": {
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.4.12",
+    "@swc/jest": "^0.2.36",
     "@types/express": "^4.17.21",
     "@types/node": "^20.12.6",
     "nodemon": "^3.1.0",
     "rimraf": "^5.0.5",
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.4.12",
-    "@swc/jest": "^0.2.36",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.4"
   }

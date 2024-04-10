@@ -1,5 +1,6 @@
 //import { fromString } from 'uint8arrays';
 import { CeramicClient } from "@ceramicnetwork/http-client";
+import type { CeramicAPI } from '@composedb/types'
 import { getAuthenticatedDID } from '@composexp/did-utils'
 import { PointsWriter } from '@composexp/points'
 import { fromString } from 'uint8arrays';
@@ -11,9 +12,8 @@ export interface PointData {
   amt: number;
 }
 
-export async function getContext() {
+export const getContext = async () => {
 
-  // CERAMIC SPECIFIC PART HERE
   const CERAMIC_URL = process.env.CERAMIC_URL || "";
   const CERAMIC_PRIVATE_KEY = process.env.CERAMIC_PRIVATE_KEY || "";
   const key = fromString(CERAMIC_PRIVATE_KEY, "base16");
@@ -21,23 +21,30 @@ export async function getContext() {
   console.log("Using ceramic node at " + CERAMIC_URL)
   const ceramic = new CeramicClient(CERAMIC_URL);
   ceramic.did = await getAuthenticatedDID(key);
-  // CERAMIC SPECIFIC CODE HERE
 
   return ceramic;
 };
 
+
 export class Publisher {
   private modelWriters = new Map<string, any>();
 
-  constructor(private ceramic: any) {}
+  constructor(private ceramic: CeramicAPI) {
+    if (! ceramic.did || ! ceramic.did.authenticated) {
+        throw("Must use an authenticated ceramic instance");
+    }
+  }
 
   async publishPoints(pointData: PointData) {
     let writer = this.modelWriters.get(pointData.model);
+
     if (!writer) {
       writer = new PointsWriter({ceramic:this.ceramic, allocationModelID:pointData.model});
       this.modelWriters.set(pointData.model, writer);
     }
-    await writer.publish(pointData);
+    const result = await writer.allocatePointsTo(pointData.recipient, pointData.amt);
+    console.log("published: " + JSON.stringify(pointData));
+    console.log("result: " + JSON.stringify(result));
   }
 }
 
