@@ -8,7 +8,9 @@ import { fromString } from 'uint8arrays';
 export interface PointData {
   recipient: string;
   model: string;
-  context: string;
+  allocationModel: string;
+  allocationFields: string[],
+  allocationData: any;
   amt: number;
 }
 
@@ -17,6 +19,11 @@ export const getContext = async () => {
   const CERAMIC_URL = process.env.CERAMIC_URL || "";
   const CERAMIC_PRIVATE_KEY = process.env.CERAMIC_PRIVATE_KEY || "";
   const key = fromString(CERAMIC_PRIVATE_KEY, "base16");
+
+  if (! CERAMIC_URL) {
+     console.log("Please set CERAMIC_URL and CERAMIC_PRIVATE_KEY in your environment")
+     process.exit()
+  }
 
   console.log("Using ceramic node at " + CERAMIC_URL)
   const ceramic = new CeramicClient(CERAMIC_URL);
@@ -44,7 +51,9 @@ export class Publisher {
     const amt = pointData.amt
 
     if (!writer) {
-      writer = new PointsWriter({ceramic:this.ceramic, aggregationModelID:pointData.model});
+      writer = new PointsWriter({ceramic:this.ceramic, 
+                                 aggregationModelID:pointData.model,
+                                 allocationModelID: pointData.allocationModel});
       this.modelWriters.set(pointData.model, writer);
     }
     if (!reader) {
@@ -55,23 +64,46 @@ export class Publisher {
       });
       this.modelReaders.set(pointData.model, reader);
     }
-    // TODO if there is an allocation model, first try to allocate, skip aggregation if set error
+    // Check if the allocation already exists; if not, set it
+    const loader = reader.loader
+    const issuer = this.ceramic.did!.id 
+    const uniq_array = [recipient]
+
+    for (const field of pointData.allocationFields) {
+        console.log(` appending ${field} with data ${pointData.allocationData[field]}`)
+        uniq_array.push(pointData.allocationData[field])
+    }
+
+    const allocDoc = await loader.loadSet(issuer, pointData.allocationModel, uniq_array, {})
+    const content = allocDoc?.content
+    if (content) {
+       // we have already allocated this!
+       console.log("repeat allocation, skipping" + content)
+       return
+    }
+    // we are not actually recording the points because we get an immutable error
+    // but it will protect us against re-allocating
+    console.log({ recipient: recipient, ...pointData.allocationData })
+    await allocDoc!.replace({
+      // Copy existing content or set recipient (assuming it's the first value)
+      ...(content ?? { recipient: recipient, ...pointData.allocationData }),
+    })
+//    await allocDoc!.replace({...allocDoc!.content, points: amt})
+    // now we have set the allocation
 
     // Do we already have an aggregation document?
     const doc = await reader.loadAggregationDocumentFor(recipient)
-    console.log("Doc is: " + JSON.stringify(doc));
-    console.log("Writer is")
-    console.log(writer)
+    let result
     if (! doc) {
       // no, we need to create one
-      await writer.setPointsAggregationFor([recipient], amt, {
+      result = await writer.setPointsAggregationFor([recipient], amt, {
         recipient,
         points: amt,
         date: new Date().toISOString(),
       });
     } else {
       // we have one already, just update the total
-      await writer.updatePointsAggregationFor(
+      result = await writer.updatePointsAggregationFor(
         recipient, 
         (content: any) => ({
             points: content ? content.points + amt : amt,
@@ -80,6 +112,7 @@ export class Publisher {
           })
        ); 
     }
+    console.log(result.id)
     console.log("published: " + JSON.stringify(pointData));
   }
 }

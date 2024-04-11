@@ -97,13 +97,11 @@ type NbaPlayerGameStats implements MultiplePointsAllocation
     # enforce only one set of stats per player per game date
     # this allows safe data reloads
     # assumes we have all at once to allocate
-    accountRelationFields: ["recipient", "gameDate"]
+    accountRelationFields: ["recipient", "gameDate", "statField"]
   ) {
     issuer: DID! @documentAccount
     recipient: DID! @accountReference
-    minutes: Int
-    assists: Int
-    points_scored: Int
     points: Int!
+    statField: String! @string(maxLength: 16)
     gameDate: DateTime!
   }

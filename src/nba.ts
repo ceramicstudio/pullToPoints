@@ -8,10 +8,10 @@ const PLAYER_ASSISTS='kjzl6hvfrbw6c5nuugjh10309fcxjpgmb4zwghm8byjcb3gyrq3k2agdrs
 const PLAYER_POINTS='kjzl6hvfrbw6c7aw39l8ww4042nedgby2aceqte29qls5n6j8cn14xsa16qi41o'
 
 // the allocators that enforce one allocation event per game+team/player
-//const GAME_OUTCOME = 'kjzl6hvfrbw6c7h7n6p4xapmgjhmeg1feo1r4cg0q2armvdkcvqdkojf9zsumda'
-//const PLAYER_OUTCOME = 'kjzl6hvfrbw6caf1cj3l2iwrpkjbz42wha1rzskpxzggtz5gjpt08u72rd1x8u9'
+const GAME_OUTCOME = 'kjzl6hvfrbw6c7h7n6p4xapmgjhmeg1feo1r4cg0q2armvdkcvqdkojf9zsumda'
+const PLAYER_OUTCOME = 'kjzl6hvfrbw6c5e0mi4c3g9rxnkkamkikhil2ywmm9ydgiht0lte3lbulkevhlb'
 
-// yields multiple {recipient, model, context, amt}
+// Interfaces describing the input data from the API
 interface DData {
   [key:string]:any;
 }
@@ -41,14 +41,23 @@ export function* generateGameResults(gameData: GameEvent[]): Generator<PointData
    for (const game of gameData) {
       const home_team_did = make_team_did(game.home_team.full_name)
       const away_team_did = make_team_did(game.visitor_team.full_name)
-      const context = 'game date' + ':' + game.date
-   
+
+      
+
+      const base = { amt: 1, allocationModel: GAME_OUTCOME, 
+                     allocationFields: ['gameDate'],
+                     allocationData:  { gameDate: game.date + ' 00:00:00', points: 1}
+                   } 
       if (game.home_team_score > game.visitor_team_score) {
-          yield { recipient: home_team_did, model: TEAM_WINS, context: context, amt: 1}
-          yield { recipient: away_team_did, model: TEAM_LOSSES, context: context, amt: 1}
+          yield { ...base, recipient: home_team_did, model: TEAM_WINS, 
+                  allocationData: { ...base.allocationData, outcome: "win"}}
+          yield { ...base, recipient: away_team_did, model: TEAM_LOSSES, 
+                  allocationData: { ...base.allocationData, outcome: "loss"}}
       } else { // ties are not possible
-          yield { recipient: away_team_did, model: TEAM_WINS, context: context, amt: 1}
-          yield { recipient: home_team_did, model: TEAM_LOSSES, context: context, amt: 1}
+          yield { ...base, recipient: away_team_did, model: TEAM_WINS,
+                  allocationData: { ...base.allocationData, outcome: "win"}}
+          yield { ...base, recipient: home_team_did, model: TEAM_LOSSES,
+                  allocationData: { ...base.allocationData, outcome: "loss"}}
       }
    }
 }
@@ -56,10 +65,17 @@ export function* generateGameResults(gameData: GameEvent[]): Generator<PointData
 export function *generatePlayerResults(statData: PlayerEvent[]): Generator<PointData> {
    for (const stats of statData) {
       const player_did = make_player_did(stats.player.first_name, stats.player.last_name, stats.player.id)
-      const context = `game ${stats.game.id}: ${stats.game.date}`
-      yield { recipient: player_did, model: PLAYER_MINUTES, context: context, amt: stats.min }
-      yield { recipient: player_did, model: PLAYER_POINTS, context: context, amt: stats.pts }
-      yield { recipient: player_did, model: PLAYER_ASSISTS, context: context, amt: stats.ast }
+      // we record all the data in the allocation record as well as adding it up
+      const base = { allocationModel: PLAYER_OUTCOME, 
+                     allocationFields: ['gameDate', 'statField'],
+                     allocationData: { 'gameDate': stats.game.date + ' 00:00:00'} }
+
+      yield { ...base, recipient: player_did, model: PLAYER_MINUTES, amt: parseInt(stats.min),
+              allocationData: { ...base.allocationData, points: parseInt(stats.min), statField: 'minutes' }}
+      yield { ...base, recipient: player_did, model: PLAYER_POINTS, amt: parseInt(stats.pts),
+              allocationData: { ...base.allocationData, points: parseInt(stats.pts), statField: 'points_scored' }}
+      yield { ...base, recipient: player_did, model: PLAYER_ASSISTS, amt: parseInt(stats.ast),
+              allocationData: { ...base.allocationData, points: parseInt(stats.ast), statField: 'assists' }} 
    }
 }
 

@@ -4,8 +4,16 @@
       "name": "nba_games",
       "endpoint": "https://api.balldontlie.io/v1/games",
       "intervalMS": 86400000,
-      "pointsModel": "",
+      "pointsModel": "kjzl6hvfrbw6c7h7n6p4xapmgjhmeg1feo1r4cg0q2armvdkcvqdkojf9zsumda",
       "tokenEnvVar": "BALLDONTLIE_TOKEN",
+      "mapping": {}
+    },
+    {
+     "name": "nba_stats",
+     "endpoint": " https://api.balldontlie.io/v1/stats",
+     "intervalMS": 86400000,
+     "pointsModel": "kjzl6hvfrbw6caf1cj3l2iwrpkjbz42wha1rzskpxzggtz5gjpt08u72rd1x8u9",
+     "tokenEnvVar": "BALLDONTLIE_TOKEN",
       "mapping": {}
     }
   ]
