@@ -2,7 +2,7 @@
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import type { CeramicAPI } from '@composedb/types'
 import { getAuthenticatedDID } from '@composexp/did-utils'
-import { PointsWriter } from '@composexp/points'
+import { PointsReader, PointsWriter } from '@composexp/points'
 import { fromString } from 'uint8arrays';
 
 export interface PointData {
@@ -28,6 +28,7 @@ export const getContext = async () => {
 
 export class Publisher {
   private modelWriters = new Map<string, any>();
+  private modelReaders = new Map<string, any>();
 
   constructor(private ceramic: CeramicAPI) {
     if (! ceramic.did || ! ceramic.did.authenticated) {
@@ -37,14 +38,49 @@ export class Publisher {
 
   async publishPoints(pointData: PointData) {
     let writer = this.modelWriters.get(pointData.model);
+    let reader = this.modelReaders.get(pointData.model);
+
+    const recipient = pointData.recipient
+    const amt = pointData.amt
 
     if (!writer) {
-      writer = new PointsWriter({ceramic:this.ceramic, allocationModelID:pointData.model});
+      writer = new PointsWriter({ceramic:this.ceramic, aggregationModelID:pointData.model});
       this.modelWriters.set(pointData.model, writer);
     }
-    const result = await writer.allocatePointsTo(pointData.recipient, pointData.amt);
+    if (!reader) {
+      reader = new PointsReader({
+           ceramic:this.ceramic,
+           issuer: this.ceramic.did!.id,
+           aggregationModelID:pointData.model
+      });
+      this.modelReaders.set(pointData.model, reader);
+    }
+    // TODO if there is an allocation model, first try to allocate, skip aggregation if set error
+
+    // Do we already have an aggregation document?
+    const doc = await reader.loadAggregationDocumentFor(recipient)
+    console.log("Doc is: " + JSON.stringify(doc));
+    console.log("Writer is")
+    console.log(writer)
+    if (! doc) {
+      // no, we need to create one
+      await writer.setPointsAggregationFor([recipient], amt, {
+        recipient,
+        points: amt,
+        date: new Date().toISOString(),
+      });
+    } else {
+      // we have one already, just update the total
+      await writer.updatePointsAggregationFor(
+        recipient, 
+        (content: any) => ({
+            points: content ? content.points + amt : amt,
+            date: new Date().toISOString(),
+            recipient,
+          })
+       ); 
+    }
     console.log("published: " + JSON.stringify(pointData));
-    console.log("result: " + JSON.stringify(result));
   }
 }
 
