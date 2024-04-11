@@ -30,11 +30,11 @@ interface PlayerEvent {
 }
 
 function make_team_did(full_name: string) {
-   return `did:nba_team_test:${full_name.replace(/\s+/g, '_')}`;
+   return `did:nba_team:${full_name.replace(/\s+/g, '_')}`;
 }
 
 function make_player_did(first: string, last:string, id:number) {
-   return `did:nba_player_test:${first.replace(/\s+/g, '_')}_${last.replace(/\s+/g, '_')}_${id}`
+   return `did:nba_player:${first.replace(/\s+/g, '_')}_${last.replace(/\s+/g, '_')}_${id}`
 }
 
 export function* generateGameResults(gameData: GameEvent[]): Generator<PointData> {

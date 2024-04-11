@@ -88,6 +88,7 @@ export class Publisher {
       // Copy existing content or set recipient (assuming it's the first value)
       ...(content ?? { recipient: recipient, ...pointData.allocationData }),
     })
+    console.log("allocation: " + allocDoc.id)
 //    await allocDoc!.replace({...allocDoc!.content, points: amt})
     // now we have set the allocation
 
@@ -112,7 +113,7 @@ export class Publisher {
           })
        ); 
     }
-    console.log(result.id)
+    console.log("aggregation: " + result.id)
     console.log("published: " + JSON.stringify(pointData));
   }
 }
