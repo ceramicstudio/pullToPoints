@@ -37,7 +37,7 @@ The SET relation on the Allocation methods is what enforces that points for the 
 
 The Aggregation methods keep the running totals in a single Model Instance Document which makes it quick to retrieve the aggregations from the decentralized network.
 
-### Extension and Future Work
+### Integration to Projects
 
 The intention of this example repository is to be cloned and modified or extended, or to serve as an example for including decentralized data functionality for allocation and aggregation - for Points - within an existing project.  
  
