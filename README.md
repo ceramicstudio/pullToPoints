@@ -6,11 +6,16 @@ This repo contains a working example of pulling NBA team wins, losses and player
 
 ### Prerequisites
 
-In order to run this harness, it is necessary to have a Ceramic node and an API token for wherever you are retrieving data from.  In particular for this example, you will need
+In order to run this harness, it is necessary to have a Ceramic node, in the environment vars
 
 ```
 CERAMIC_URL
 CERAMIC_PRIVATE_KEY
+```
+
+and an API token for wherever you are retrieving data from.  In particular for this example, you will need
+
+```
 BALLDONTLIE_TOKEN
 ```
 To run a ceramic node, see the [Ceramic Developer Documentation](https://developers.ceramic.network/) 
