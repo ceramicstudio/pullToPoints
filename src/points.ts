@@ -1,8 +1,8 @@
 //import { fromString } from 'uint8arrays';
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import type { CeramicAPI } from '@composedb/types'
-import { getAuthenticatedDID } from '@composexp/did-utils'
-import { PointsReader, PointsWriter } from '@composexp/points'
+import { getAuthenticatedDID } from '@ceramic-solutions/did-utils'
+import { PointsReader, PointsWriter } from '@ceramic-solutions/points'
 import { fromString } from 'uint8arrays';
 
 export interface PointData {
