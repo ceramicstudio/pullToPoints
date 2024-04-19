@@ -1,8 +1,8 @@
 //import { fromString } from 'uint8arrays';
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import type { CeramicAPI } from '@composedb/types'
-import { getAuthenticatedDID } from '@composexp/did-utils'
-import { PointsReader, PointsWriter } from '@composexp/points'
+import { getAuthenticatedDID } from '@ceramic-solutions/key-did'
+import { PointsReader, PointsWriter } from '@ceramic-solutions/points'
 import { fromString } from 'uint8arrays';
 
 export interface PointData {
@@ -51,13 +51,13 @@ export class Publisher {
     const amt = pointData.amt
 
     if (!writer) {
-      writer = new PointsWriter({ceramic:this.ceramic, 
+      writer = PointsWriter.fromAuthenticated({ceramic:this.ceramic, 
                                  aggregationModelID:pointData.model,
                                  allocationModelID: pointData.allocationModel});
       this.modelWriters.set(pointData.model, writer);
     }
     if (!reader) {
-      reader = new PointsReader({
+      reader = PointsReader.create({
            ceramic:this.ceramic,
            issuer: this.ceramic.did!.id,
            aggregationModelID:pointData.model
