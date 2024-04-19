@@ -44,4 +44,4 @@ The Aggregation methods keep the running totals in a single Model Instance Docum
 
 The intention of this example repository is to be cloned and modified or extended, or to serve as an example for including decentralized data functionality for allocation and aggregation - for Points - within an existing project.  
  
-The `points` npm module is available [here](https://github.com/ceramicstudio/solutions)
+The `points` capability is included in the [Ceramic Solutions SDK](https://github.com/ceramicstudio/solutions-sdk) and as an npm package at [@ceramic-solutions/points](https://www.npmjs.com/package/@ceramic-solutions/points)
