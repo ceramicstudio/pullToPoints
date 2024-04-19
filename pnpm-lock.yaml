@@ -5,18 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@ceramic-solutions/key-did':
+    specifier: ^0.1.0
+    version: 0.1.0(typescript@5.4.4)
+  '@ceramic-solutions/points':
+    specifier: ^0.1.1
+    version: 0.1.2(typescript@5.4.4)
   '@ceramicnetwork/http-client':
     specifier: ^5.6.0
     version: 5.6.0(typescript@5.4.4)
   '@composedb/types':
     specifier: ^0.7.1
     version: 0.7.1(@polkadot/util@7.9.2)(typescript@5.4.4)
-  '@composexp/did-utils':
-    specifier: link:../solutions/utils/did
-    version: link:../solutions/utils/did
-  '@composexp/points':
-    specifier: link:../solutions/libraries/points
-    version: link:../solutions/libraries/points
   '@didtools/codecs':
     specifier: ^3.0.0
     version: 3.0.0
@@ -101,6 +101,54 @@ packages:
     resolution: {integrity: sha512-89eSBLJsxNxOERC0Op4vd+0Bqm6wRMqMbFtV3i0/fbaWw/mJ8Q3eBvgX0G4SyrOOLCtbu98HspF8o09MRT+KzQ==}
     dependencies:
       regenerator-runtime: 0.13.11
+
+  /@ceramic-solutions/experiments-client@0.1.0(typescript@5.4.4):
+    resolution: {integrity: sha512-ZXfu/jINvxOhPBLx0jINJWFmyg9J08TtkhuV9Iw2NBhwApotsXyFmzwQ0Qi0fLsTn9pOZJOuCoDpPbDqgHHgiQ==}
+    engines: {node: '>=20'}
+    dependencies:
+      '@ceramic-solutions/key-did': 0.1.0(typescript@5.4.4)
+      '@ceramicnetwork/http-client': 5.7.0(typescript@5.4.4)
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
+
+  /@ceramic-solutions/key-did@0.1.0(typescript@5.4.4):
+    resolution: {integrity: sha512-GKKoMi9IqdxmaHio7LaAEFsCK4waECiCKkWSHpfwDoBDLY29fko6v5lhJVEG9/4114Bpsv56oR+GVbqYnB286g==}
+    engines: {node: '>=20'}
+    dependencies:
+      dids: 5.0.2(typescript@5.4.4)
+      key-did-provider-ed25519: 4.0.2(typescript@5.4.4)
+      key-did-resolver: 4.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
+
+  /@ceramic-solutions/points-composite@0.1.0:
+    resolution: {integrity: sha512-WXe5egdeBW/Vd3zFHBZ3+C36PRk+f3p9nNOEaqMWHL0mrBfRXVkGxOgNjbGjQnWAx3rxB3a/0dGkh41MHxlw1Q==}
+    engines: {node: '>=20'}
+    dev: false
+
+  /@ceramic-solutions/points@0.1.2(typescript@5.4.4):
+    resolution: {integrity: sha512-pY6qGd/sIc7mZYf8Q0bj6aWo1pYSg1Ez/yo/eAL/xA5mUHM088bZXNPFrj7+Kq6jNzy+tmDeO6ig2u/ASY/OLw==}
+    engines: {node: '>=20'}
+    dependencies:
+      '@ceramic-solutions/experiments-client': 0.1.0(typescript@5.4.4)
+      '@ceramic-solutions/points-composite': 0.1.0
+      '@composedb/loader': 0.7.1(typescript@5.4.4)
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
 
   /@ceramicnetwork/anchor-listener@4.5.0(typescript@5.4.4):
     resolution: {integrity: sha512-m2Z9v0ZHsAETEKJQh+lpgzW3IpBFif/V35qPmW+JWtWXlnm3HA87kgY/1xnZ22wQdvQCEfEuiLaGnAC2yvuTGg==}
@@ -199,6 +247,24 @@ packages:
       - utf-8-validate
       - zod
 
+  /@ceramicnetwork/codecs@4.6.0(typescript@5.4.4):
+    resolution: {integrity: sha512-cSi1XftZ56rl8fQ6Rrckazv5FaaPAygB6GkK+5L4uTjvjFYC3e23kQhFOKQ+aDQKm6trAfenVjd9V8Gb1EAMzQ==}
+    dependencies:
+      '@ceramicnetwork/common': 5.6.0(typescript@5.4.4)
+      '@ceramicnetwork/streamid': 5.0.0
+      cartonne: 3.0.1
+      codeco: 1.2.1
+      dag-jose: 4.0.0
+      multiformats: 13.1.0
+      uint8arrays: 5.0.3
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
+
   /@ceramicnetwork/common@3.4.1(typescript@5.4.4):
     resolution: {integrity: sha512-SVtPG6tkaDF77iM2mweXV+JSgZa3tKvuku0TIrA+pZswa1EHtnRHssSilaj4q91JNaTy2Gsk86oK6MuQp9+LKg==}
     dependencies:
@@ -252,6 +318,34 @@ packages:
       - typescript
       - utf-8-validate
       - zod
+
+  /@ceramicnetwork/common@5.6.0(typescript@5.4.4):
+    resolution: {integrity: sha512-5zNcZRjZ8/G0jKEubE3MpKfdwCB6npdYiBmsHWztt4PjnOn6H+Z3rsnh8RPxoC0liu271rHeJuHViqjtwCW3dg==}
+    dependencies:
+      '@ceramicnetwork/streamid': 5.0.0
+      '@didtools/cacao': 3.0.1(typescript@5.4.4)
+      '@didtools/pkh-ethereum': 0.2.1
+      '@didtools/pkh-solana': 0.2.0(typescript@5.4.4)
+      '@didtools/pkh-stacks': 0.2.0(typescript@5.4.4)
+      '@didtools/pkh-tezos': 0.3.0(typescript@5.4.4)
+      '@ipld/dag-cbor': 9.2.0
+      '@stablelib/random': 1.0.2
+      caip: 1.1.1
+      flat: 5.0.2
+      it-first: 3.0.4
+      jet-logger: 1.2.2
+      lodash.clonedeep: 4.5.0
+      logfmt: 1.4.0
+      multiformats: 13.1.0
+      rxjs: 7.8.1
+      uint8arrays: 5.0.3
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
 
   /@ceramicnetwork/core@5.6.0(@polkadot/util@7.9.2)(typescript@5.4.4):
     resolution: {integrity: sha512-svRyYxXW1HeP0EhxDjtisrZYfYuPUjMA4ZlM5o4xs6qGO0GJl88ttPTFPA5LI/iWAdzwyeTxpvmORwoq0A+j6w==}
@@ -340,6 +434,26 @@ packages:
       - typescript
       - utf-8-validate
       - zod
+
+  /@ceramicnetwork/http-client@5.7.0(typescript@5.4.4):
+    resolution: {integrity: sha512-T6iMr9QpWIkXfVJ8lHGS+DZ7qGmgUaIfuxARgMEA5OhrbtIZWA08Vl3I5r7mIXmj1zWnWAvS/zG/w2roy8VP1w==}
+    dependencies:
+      '@ceramicnetwork/common': 5.6.0(typescript@5.4.4)
+      '@ceramicnetwork/stream-caip10-link': 5.6.0(typescript@5.4.4)
+      '@ceramicnetwork/stream-model': 4.6.0(typescript@5.4.4)
+      '@ceramicnetwork/stream-model-instance': 4.7.0(typescript@5.4.4)
+      '@ceramicnetwork/stream-tile': 5.6.0(typescript@5.4.4)
+      '@ceramicnetwork/streamid': 5.0.0
+      '@scarf/scarf': 1.3.0
+      query-string: 7.1.3
+      rxjs: 7.8.1
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
 
   /@ceramicnetwork/indexing@4.6.0(pg@8.11.5)(sqlite3@5.1.7)(typescript@5.4.4):
     resolution: {integrity: sha512-e5afRrLfr4lh7nUbEzZz5CbSQr9fkinfTDHiYVCKpxYEVQLEVCo1qihDCVJ3vK1p0psk6eIUZ1CYKXdV6Js5Lg==}
@@ -476,6 +590,22 @@ packages:
       - utf-8-validate
       - zod
 
+  /@ceramicnetwork/stream-caip10-link@5.6.0(typescript@5.4.4):
+    resolution: {integrity: sha512-iiqv6W3Xtihne3In+WtUApUaqPnemIRhGE2488VCokF8aZW+DBVRIOUPrHUmPzY1W7kN7ZNDhQgIOU53zfX//w==}
+    dependencies:
+      '@ceramicnetwork/common': 5.6.0(typescript@5.4.4)
+      '@ceramicnetwork/streamid': 5.0.0
+      caip: 1.1.1
+      did-resolver: 4.1.0
+      lodash.clonedeep: 4.5.0
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
+
   /@ceramicnetwork/stream-handler-common@4.5.0(typescript@5.4.4):
     resolution: {integrity: sha512-WpvAuSEtrHviLj4AOV9muoNb6CfdqkBFWYE6Ph8xRHvL5Q9noBZprn5Mi0wt6XSCe8sydsFM+Cw0A2vhQ37bRw==}
     dependencies:
@@ -565,6 +695,24 @@ packages:
       - utf-8-validate
       - zod
 
+  /@ceramicnetwork/stream-model-instance@4.7.0(typescript@5.4.4):
+    resolution: {integrity: sha512-g3h53Tyz7Z7XE6NmBYidOfOBEbaqf5Ja5vi5J3pUIaTpgulB+i5PqK3WjfNKwmUhcxBEGb+7ThiXhm/PqqHOHQ==}
+    dependencies:
+      '@ceramicnetwork/common': 5.6.0(typescript@5.4.4)
+      '@ceramicnetwork/streamid': 5.0.0
+      '@ipld/dag-cbor': 7.0.3
+      '@stablelib/random': 1.0.2
+      fast-json-patch: 3.1.1
+      object-sizeof: 2.6.4
+      uint8arrays: 5.0.3
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
+
   /@ceramicnetwork/stream-model@4.5.0(typescript@5.4.4):
     resolution: {integrity: sha512-I0jYlptr4v31T3VlSwvYMggrx2DLahsC1u5ErVRBZeW8NeY/7VWUzKVQtuOfc5Wa2XdRJ7ODINyszWKb6nIneg==}
     dependencies:
@@ -586,6 +734,29 @@ packages:
       - typescript
       - utf-8-validate
       - zod
+
+  /@ceramicnetwork/stream-model@4.6.0(typescript@5.4.4):
+    resolution: {integrity: sha512-PqlwttvCtZ5dAXqLBL3JdUxT6sclsxt4BHO4iwojiPOxUSZRnVWY8v1nUISfF9UKUqg3Y2Fv/+ZHGonGPFqbYg==}
+    dependencies:
+      '@ceramicnetwork/codecs': 4.6.0(typescript@5.4.4)
+      '@ceramicnetwork/common': 5.6.0(typescript@5.4.4)
+      '@ceramicnetwork/streamid': 5.0.0
+      '@ipld/dag-cbor': 7.0.3
+      '@stablelib/random': 1.0.2
+      ajv: 8.12.0
+      ajv-formats: 2.1.1(ajv@8.12.0)
+      codeco: 1.2.1
+      fast-json-patch: 3.1.1
+      json-schema-typed: 8.0.1
+      multiformats: 13.1.0
+      uint8arrays: 5.0.3
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
 
   /@ceramicnetwork/stream-tile-handler@5.6.0(typescript@5.4.4):
     resolution: {integrity: sha512-wOkmvcSzGCbrU2SC0Q8wvCFc4P/gX6FM2y4MHmk6wziUovqFFcp+n2vD1X8CC5WZllpji4JRiLdphjZNRZSruw==}
@@ -624,6 +795,25 @@ packages:
       - typescript
       - utf-8-validate
       - zod
+
+  /@ceramicnetwork/stream-tile@5.6.0(typescript@5.4.4):
+    resolution: {integrity: sha512-VoIZARWDEAHX6nZyiu6X2C5rg87LY/Vkgd1yAnNXZOqEM5RlBejsxsqoljJQD76XYq7MQZcPxD44zZXqu5aa8w==}
+    dependencies:
+      '@ceramicnetwork/common': 5.6.0(typescript@5.4.4)
+      '@ceramicnetwork/streamid': 5.0.0
+      '@ipld/dag-cbor': 7.0.3
+      '@stablelib/random': 1.0.2
+      dids: 5.0.2(typescript@5.4.4)
+      fast-json-patch: 3.1.1
+      lodash.clonedeep: 4.5.0
+      uint8arrays: 5.0.3
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
 
   /@ceramicnetwork/streamid@3.4.1:
     resolution: {integrity: sha512-m6uZjcdMdwzyO6TIVTJF4IJYjuceflmYDrlRxDcXrZySBNNKnL40tSHbzpcTfOy5YcIsTqJFxqUZQrFrC0mlDA==}
@@ -801,7 +991,6 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: true
 
   /@composedb/runtime@0.7.1(@polkadot/util@7.9.2)(typescript@5.4.4):
     resolution: {integrity: sha512-ijv1/jNWYAwhsnJYJbyGT8MrQgZoIhDGDoD6ggF5VbcC8bYZcK88yNwASxT3s9NxQTelKznidvk9V14MxN8RUA==}
@@ -3385,7 +3574,6 @@ packages:
 
   /dataloader@2.2.2:
     resolution: {integrity: sha512-8YnDaaf7N3k/q5HnTJVuzSyLETjoZjVmHc4AeKAzOvKHEFQKcn64OKBfzHYtE9zGjctNM7V9I0MfnUVLpi7M5g==}
-    dev: true
 
   /debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -4676,6 +4864,23 @@ packages:
       fast-json-stable-stringify: 2.1.0
       rpc-utils: 0.6.2
       uint8arrays: 4.0.10
+
+  /key-did-provider-ed25519@4.0.2(typescript@5.4.4):
+    resolution: {integrity: sha512-bnnRGuuUtylKGMVmgXVSoGccBg87roFi6xy5dQmTgNqnCmrxBBUatYoVimcnA+SGCFqi2qk6B9dD10Ed4rTZPg==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      '@noble/curves': 1.4.0
+      did-jwt: 7.4.7
+      dids: 5.0.2(typescript@5.4.4)
+      fast-json-stable-stringify: 2.1.0
+      rpc-utils: 0.6.2
+      uint8arrays: 5.0.3
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+      - zod
+    dev: false
 
   /key-did-resolver@4.0.0:
     resolution: {integrity: sha512-+U2nd/0rjO4Yqe2hnHBD7ygcLRfT43Oje9IIjv1BlBi0lopwxZpIFQ7GekguOHK02r+JGdl8mpJVNHs5lvXVOA==}
