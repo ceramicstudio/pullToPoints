@@ -30,7 +30,7 @@ pnpm start
 ```
 
 This will retrieve the last days' game outcomes and player statistics, and will aggregate wins & losses by team, and minutes played, assists and points scored by player.
-(note that it will only retrieve data during the NBA season)
+(note that by default it will only retrieve data during the NBA season, but you can edit the start and end dates to retrieve older data if desired.)
 
 ### How it Works
 
