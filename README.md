@@ -23,11 +23,14 @@ For the API token, see [balldontlie.io](https://balldontlie.io)
 
 ### Install and run
 
+```
 pnpm install
 pnpm build
 pnpm start
+```
 
 This will retrieve the last days' game outcomes and player statistics, and will aggregate wins & losses by team, and minutes played, assists and points scored by player.
+(note that it will only retrieve data during the NBA season)
 
 ### How it Works
 
